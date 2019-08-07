@@ -50,14 +50,55 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+        lvMonHoc = (ListView) findViewById(R.id.lvmonhoc);
+        ArrayList<MonHoc> arrMonhoc = new ArrayList<>();
+        for (int i =0 ; i<30; i++){
+            arrMonhoc.add(new MonHoc("Môn học "+i, "ca "+i));
+        }
+
+        CustomAdapter customAdaper = new CustomAdapter(this,R.layout.row_listview_monhoc,arrMonhoc);
+        lvMonHoc.setAdapter(customAdaper);
 
         // xin quyền quay camera và 1 số quyền cần thiết
         Xinquyen();
+        //set button back
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Home");
 
+        //set navication bar
+        dl = (DrawerLayout)findViewById(R.id.activity_main);
+        t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
+
+        dl.addDrawerListener(t);
+        t.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        nv = (NavigationView)findViewById(R.id.nv);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch(id)
+                {
+                    case R.id.diemdanh:
                         Intent intent = new Intent(MainActivity.this, QrCodeActivity.class);
                         startActivityForResult( intent,101);
-    
+                        break;
+                    case R.id.setting:
+                        Toast.makeText(MainActivity.this, "Chức năng đang làm", Toast.LENGTH_SHORT).show();
+                       // Intent intentSetting = new Intent(MainActivity.this,SettingActivity.class);
+                       // startActivity(intentSetting);
+                        break;
+                    case R.id.infor:
+                        Toast.makeText(MainActivity.this, "Thông tin tác giả",Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
 
 
 

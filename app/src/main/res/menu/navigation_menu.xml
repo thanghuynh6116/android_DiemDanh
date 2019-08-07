@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/diemdanh"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Điểm danh bằng QRcode"/>
+    <item android:id="@+id/setting"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Cài đặt"/>
+    <item android:id="@+id/infor"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="Tác giả"/>
+
+</menu>
