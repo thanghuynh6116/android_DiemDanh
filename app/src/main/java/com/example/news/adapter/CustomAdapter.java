@@ -33,7 +33,7 @@ public class CustomAdapter extends ArrayAdapter<MonHoc> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.row_listview, parent, false);
+            convertView = LayoutInflater.from(context).inflate(resource, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.imageNews = (ImageView) convertView.findViewById(R.id.image_news);
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.title);

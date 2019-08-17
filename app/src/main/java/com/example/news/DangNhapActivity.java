@@ -26,7 +26,7 @@ public class DangNhapActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(email.getText().toString().equals("admin") && pass.getText().toString().equals("123456")){
-                    Intent intentSetting = new Intent(DangNhapActivity.this,MainActivity.class);
+                    Intent intentSetting = new Intent(DangNhapActivity.this,DanhSachMonHocActivity.class);
                     startActivity(intentSetting);
                 }
                 else{
