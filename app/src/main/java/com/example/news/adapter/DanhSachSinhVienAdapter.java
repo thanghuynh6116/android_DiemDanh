@@ -5,9 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.news.DanhSachSinhVienActivity;
 import com.example.news.R;
 import com.example.news.model.SinhVien;
 import com.example.news.model.MonHoc;
@@ -20,6 +23,7 @@ public class DanhSachSinhVienAdapter extends ArrayAdapter<SinhVien> {
     private Context context;
     private int resource;
     private List<SinhVien> arrDanhSachSV;
+    private int stt = 0;
 
     public DanhSachSinhVienAdapter(Context context, int resource, ArrayList<SinhVien> arrDanhSachSV) {
         super(context, resource, arrDanhSachSV);
@@ -29,7 +33,7 @@ public class DanhSachSinhVienAdapter extends ArrayAdapter<SinhVien> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final  int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(resource, parent, false);
@@ -37,6 +41,27 @@ public class DanhSachSinhVienAdapter extends ArrayAdapter<SinhVien> {
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.name);
             viewHolder.tvCode = (TextView) convertView.findViewById(R.id.msv);
             viewHolder.tvBirthday = (TextView) convertView.findViewById(R.id.birthday);
+            viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
+            viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    try{
+                        if(b){
+                            arrDanhSachSV.get(position).setCheck(true);
+                            DanhSachSinhVienActivity.arrSinhVien.get(position).setCheck(true);
+                        }
+                        else{
+                            arrDanhSachSV.get(position).setCheck(false);
+                            DanhSachSinhVienActivity.arrSinhVien.get(position).setCheck(false);
+                        }
+                    }
+                    catch(Exception e){
+
+                    }
+
+
+                }
+            });
 
             convertView.setTag(viewHolder);
         } else {
@@ -50,8 +75,10 @@ public class DanhSachSinhVienAdapter extends ArrayAdapter<SinhVien> {
         return convertView;
     }
 
+
     public class ViewHolder {
         TextView tvName,tvCode,tvBirthday;
+        CheckBox checkBox;
 
     }
     public void refresh(List<SinhVien> newsList){

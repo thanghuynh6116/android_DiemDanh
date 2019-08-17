@@ -4,6 +4,15 @@ public class SinhVien {
     private String name;
     private String birthday;
     private String code;
+    private boolean isCheck;
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
 
     public String getName() {
         return name;
