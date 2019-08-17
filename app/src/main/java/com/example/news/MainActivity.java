@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         lvMonHoc = (ListView) findViewById(R.id.lvmonhoc);
         ArrayList<MonHoc> arrMonhoc = new ArrayList<>();
         for (int i =0 ; i<30; i++){
-            arrMonhoc.add(new MonHoc("Môn học "+i, "ca "+i));
+            arrMonhoc.add(new MonHoc(1,"Môn học "+i, "ca "+i));
         }
 
         CustomAdapter customAdaper = new CustomAdapter(this,R.layout.row_listview_monhoc,arrMonhoc);

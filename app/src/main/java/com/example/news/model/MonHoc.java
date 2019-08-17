@@ -1,8 +1,17 @@
 package com.example.news.model;
 
 public class MonHoc {
+    private int id;
     private String tenmonhoc;
     private String cahoc;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTenmonhoc() {
         return tenmonhoc;
@@ -20,11 +29,12 @@ public class MonHoc {
         this.cahoc = cahoc;
     }
 
-    public MonHoc(String tenmonhoc, String cahoc) {
-        this.tenmonhoc = tenmonhoc;
-        this.cahoc = cahoc;
+    public MonHoc() {
     }
 
-    public MonHoc() {
+    public MonHoc(int id, String tenmonhoc, String cahoc) {
+        this.id = id;
+        this.tenmonhoc = tenmonhoc;
+        this.cahoc = cahoc;
     }
 }

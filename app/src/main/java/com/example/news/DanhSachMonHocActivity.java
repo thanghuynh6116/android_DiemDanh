@@ -1,7 +1,10 @@
 package com.example.news;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
@@ -34,6 +37,17 @@ public class DanhSachMonHocActivity extends AppCompatActivity {
         customAdaper = new CustomAdapter(getApplicationContext(),R.layout.row_listview_monhoc,arrMonhoc);
         lvMonHoc.setAdapter(customAdaper);
         customAdaper.notifyDataSetChanged();
+
+        // set on click chuyển sang danh sách sinh viên
+        lvMonHoc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(DanhSachMonHocActivity.this,DanhSachSinhVienActivity.class);
+                intent.putExtra("mamon",arrMonhoc.get(i).getId());
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void getMonHoc() {
@@ -46,10 +60,7 @@ public class DanhSachMonHocActivity extends AppCompatActivity {
                     for (int i=0 ;i<response.length();i++){
                         try {
                             JSONObject jsonArray = response.getJSONObject(i);
-                            String a = jsonArray.getString("Name");
-                            a = jsonArray.getString("Time");
-                            a = jsonArray.getString("Room");
-                            MonHoc monHoc = new MonHoc(jsonArray.getString("Name"), "Thời Gian: "+jsonArray.getString("Time") + " Phòng: "+ jsonArray.getString("Room"));
+                            MonHoc monHoc = new MonHoc(jsonArray.getInt("id"), jsonArray.getString("Name"), "Thời Gian: "+jsonArray.getString("Time") + " Phòng: "+ jsonArray.getString("Room"));
                             arrMonhoc.add(monHoc);
 
 
