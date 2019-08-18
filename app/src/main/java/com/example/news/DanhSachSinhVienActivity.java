@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.blikoon.qrcodescanner.QrCodeActivity;
 import com.example.news.adapter.CustomAdapter;
 import com.example.news.adapter.DanhSachSinhVienAdapter;
 import com.example.news.model.MonHoc;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 
 public class DanhSachSinhVienActivity extends AppCompatActivity {
     public ListView lvSinhVien;
-    Button btnDiemDanh;
+    Button btnDiemDanh, btnQRCode;
     DanhSachSinhVienAdapter danhSachSinhVienAdapter;
     public static ArrayList<SinhVien> arrSinhVien = new ArrayList<>();
     private static final int REQUEST_CODE_QR_SCAN = 101;
@@ -41,6 +42,7 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
         setContentView(R.layout.activity_danh_sach_sinh_vien);
         lvSinhVien = (ListView) findViewById(R.id.lvsinhvien);
         btnDiemDanh = (Button) findViewById(R.id.btndiemdanh);
+        btnQRCode = (Button) findViewById(R.id.btndiemdanhbangqrcode);
         setTitle("Danh Sách Sinh Viên");
         getSinhVien();
         danhSachSinhVienAdapter = new DanhSachSinhVienAdapter(getApplicationContext(),R.layout.row_ds_sinhvien,arrSinhVien);
@@ -62,6 +64,14 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
 
                 }
                 Toast.makeText(DanhSachSinhVienActivity.this, "Điểm danh thành công "+ dem + " sinh viên", Toast.LENGTH_SHORT).show();
+            }
+        });
+//điểm danh bằng qrcode
+        btnQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DanhSachSinhVienActivity.this, QrCodeActivity.class);
+                startActivityForResult( intent,101);
             }
         });
 
