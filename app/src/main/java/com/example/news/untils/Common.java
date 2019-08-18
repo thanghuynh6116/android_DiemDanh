@@ -1,5 +1,7 @@
 package com.example.news.untils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -35,5 +37,20 @@ public class Common {
 
         }
         return null;
+    }
+
+
+    public static void saveEmail(Context context, String email)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("dangnhap", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("email",email);
+        editor.apply();
+    }
+
+    public static  String getEmail1(Context context)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("dangnhap", Context.MODE_PRIVATE);
+        return preferences.getString("email", "");
     }
 }
