@@ -22,15 +22,6 @@
         android:padding="10dp" />
 
 
-    <EditText
-        android:id="@+id/etLoginPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@android:color/white"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:padding="10dp" />
 
     <Button
         android:id="@+id/btnLogin"
@@ -38,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:background="#f05924"
-        android:text="Login"
+        android:text="Vào APP"
         android:textColor="@android:color/white" />
 
 
