@@ -73,7 +73,55 @@ public class Common {
         return preferences.getString("email", "");
     }
 
-   
+    public static void dangXuat(Context context)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("dangnhap", Context.MODE_PRIVATE);
+        preferences.edit().clear().commit();
+    }
+    public static boolean checkDangNhap(Context context)
+    {
+        SharedPreferences preferences = context.getSharedPreferences("dangnhap", Context.MODE_PRIVATE);
+        if(!preferences.getString("email", "").equals(""))
+            return true;
+        return false;
+    }
+
+
+    public static boolean isValidEmailId(String email){
+
+        return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$").matcher(email).matches();
+    }
+
+    // check data QRCODE
+    public static boolean isValidQRCODE(String data){
+        if(!data.contains("HỌ VÀ TÊN:"))
+            return false;
+        if(!data.contains("NGÀNH:"))
+            return false;
+        if(!data.contains("KHÓA HỌC:"))
+            return false;
+        if(!data.contains("MÃ SINH VIÊN:"))
+            return false;
+        if(!data.contains("ĐỊNH DANH:"))
+            return false;
+        if(!data.contains("@is-tech.vn"))
+            return false;
+        return true;
+
+
+    }
+
+    public static String getTenSVQRCODE(String data){
+        data = VNCharacterUtils.removeAccent(data);
+        return findText("HO VA TEN:","NGANH",data).trim();
+
+    }
+
 
 
 
