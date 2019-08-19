@@ -3,10 +3,15 @@ package com.example.news;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,6 +28,8 @@ import com.example.news.adapter.CustomAdapter;
 import com.example.news.adapter.DanhSachSinhVienAdapter;
 import com.example.news.model.MonHoc;
 import com.example.news.model.SinhVien;
+import com.example.news.untils.Common;
+import com.example.news.untils.VNCharacterUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +43,14 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
     DanhSachSinhVienAdapter danhSachSinhVienAdapter;
     public static ArrayList<SinhVien> arrSinhVien = new ArrayList<>();
     private static final int REQUEST_CODE_QR_SCAN = 101;
+
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
+    int malop;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +59,9 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
         btnDiemDanh = (Button) findViewById(R.id.btndiemdanh);
         btnQRCode = (Button) findViewById(R.id.btndiemdanhbangqrcode);
         setTitle("Danh Sách Sinh Viên");
+        Intent intent = getIntent();
+        malop = intent.getIntExtra("malop",0);
+
         getSinhVien();
         danhSachSinhVienAdapter = new DanhSachSinhVienAdapter(getApplicationContext(),R.layout.row_ds_sinhvien,arrSinhVien);
         lvSinhVien.setAdapter(danhSachSinhVienAdapter);
@@ -57,7 +75,7 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
                 for(int i = 0; i< arrSinhVien.size(); i++){
                     if(arrSinhVien.get(i).isCheck())
                     {
-                        diemdanh("malop", arrSinhVien.get(i).getCode());
+                        diemdanh(malop, arrSinhVien.get(i).getCode());
                         dem++;
 
                     }
@@ -80,7 +98,7 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
     public void getSinhVien() {
         arrSinhVien = new ArrayList<>();
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest("http://cntttest.vanlanguni.edu.vn:18080/Cap21T4/AttendanceManagement/JSON/GetStudents?courseID=555",new Response.Listener<JSONArray>() {
+        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest("http://cntttest.vanlanguni.edu.vn:18080/Cap21T4/AttendanceManagement/JSON/GetStudents?courseID="+malop,new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 if (response != null){
@@ -109,12 +127,44 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
 
 
 
+        //set menu
+        dl = (DrawerLayout)findViewById(R.id.activity_dssinhvien);
+        t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
+
+        dl.addDrawerListener(t);
+        t.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        nv = (NavigationView)findViewById(R.id.nv);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch(id)
+                {
+                    case R.id.dangxuat:
+                        Toast.makeText(getApplicationContext(), "Đăng Xuất Thành Công", Toast.LENGTH_SHORT).show();
+                        Common.dangXuat(getApplicationContext());
+                        Intent intentSetting = new Intent(getApplicationContext(),DangNhapActivity.class);
+                        startActivity(intentSetting);
+                        break;
+                    case R.id.infor:
+                        Toast.makeText(getApplicationContext(), "Phần mềm được thực hiện bởi nhóm sinh viên ",Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+
 
 
     }
 
 
-    public void diemdanh(String malop,String masv) {
+    public void diemdanh(int malop,String masv) {
 
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         String urlAPI = "http://cntttest.vanlanguni.edu.vn:18080/Cap21T4/AttendanceManagement/JSON/AddAttendance?code=6128&courseID="+malop+"&sessionID=1&attendance=[\""+masv+"\"]";
@@ -164,25 +214,43 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
         {
             if(data==null)
                 return;
-            //Getting the passed result
-            //Getting the passed result
-            String result = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
-            AlertDialog alertDialog = new AlertDialog.Builder(DanhSachSinhVienActivity.this).create();
 
+
+            final String result = data.getStringExtra("com.blikoon.qrcodescanner.got_qr_scan_relult");
+            // check xem data có đúng hay không, có phải là đang quyest thẻ sinh viên hay không
+            if(!Common.isValidQRCODE(result.toString())){
+                AlertDialog alertDialog = new AlertDialog.Builder(DanhSachSinhVienActivity.this).create();
+                alertDialog.setTitle("Thông Tin Không Chính Xác");
+                alertDialog.setMessage("Vui lòng quét đúng mã QR in trên thẻ sinh viên của trường.!");
+                Log.d("thang", "onActivityResult: "+ VNCharacterUtils.removeAccent(result));
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                return;
+            }
+
+            //thông tin điểm danh
+            AlertDialog alertDialog = new AlertDialog.Builder(DanhSachSinhVienActivity.this).create();
             alertDialog.setTitle("Thông Tin Sinh Viên");
             alertDialog.setMessage(result);
+            Log.d("thang", "onActivityResult: "+ result);
 
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Hủy",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Hủy",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Điểm Danh",
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Điểm Danh",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            diemdanh("malop", "masv");
-                            Toast.makeText(DanhSachSinhVienActivity.this, "Điểm danh thành công sinh viên " , Toast.LENGTH_SHORT).show();
+                            diemdanh(malop, "masv");
+                            Toast.makeText(DanhSachSinhVienActivity.this, "Điểm danh thành công" , Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     });

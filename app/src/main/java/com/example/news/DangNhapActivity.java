@@ -17,6 +17,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.news.untils.Common;
+
+import javax.xml.validation.Validator;
+
 public class DangNhapActivity extends AppCompatActivity {
 
     private EditText email,pass;
@@ -28,17 +32,22 @@ public class DangNhapActivity extends AppCompatActivity {
         Xinquyen();
         email = (EditText) findViewById(R.id.etLoginUsername);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        if(Common.checkDangNhap(getApplicationContext())){
+            Intent intentSetting = new Intent(DangNhapActivity.this,DanhSachMonHocActivity.class);
+            startActivity(intentSetting);
+        }
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(email.getText().toString().length()>0){
+                if(Common.isValidEmailId(email.getText().toString())){
                     Intent intentSetting = new Intent(DangNhapActivity.this,DanhSachMonHocActivity.class);
                     startActivity(intentSetting);
+                    Common.saveEmail(getApplicationContext(),email.getText().toString());
                 }
                 else{
                     AlertDialog alertDialog = new AlertDialog.Builder(DangNhapActivity.this).create();
                     alertDialog.setTitle("Lỗi");
-                    alertDialog.setMessage("Vui lòng nhập địa chỉ email");
+                    alertDialog.setMessage("Vui lòng nhập chính xác địa chỉ email");
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Hủy",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -77,23 +86,40 @@ public class DangNhapActivity extends AppCompatActivity {
                         101);
             }
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                // put your code for Version>=Marshmallow
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
-                    Toast.makeText(this,
-                            "App required access to audio", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO
-                }, 101);
-            }
+            if (checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
 
-        } else {
-            // put your code for Version < Marshmallow
+                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                        101);
+            }
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(Common.checkDangNhap(getApplicationContext())){
+            Intent intentSetting = new Intent(DangNhapActivity.this,DanhSachMonHocActivity.class);
+            startActivity(intentSetting);
+        }
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(Common.checkDangNhap(getApplicationContext())){
+            Intent intentSetting = new Intent(DangNhapActivity.this,DanhSachMonHocActivity.class);
+            startActivity(intentSetting);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(Common.checkDangNhap(getApplicationContext())){
+            Intent intentSetting = new Intent(DangNhapActivity.this,DanhSachMonHocActivity.class);
+            startActivity(intentSetting);
+        }
+    }
 }
