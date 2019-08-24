@@ -12,8 +12,8 @@
 
       <ListView
         android:id="@+id/lvsinhvien"
-        android:layout_width="match_parent"
-        android:layout_height="549dp">
+        android:layout_width="385dp"
+        android:layout_height="407dp">
 
       </ListView>
 
