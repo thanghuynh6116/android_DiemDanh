@@ -122,6 +122,12 @@ public class Common {
 
     }
 
+    public static String getMaSV(String data){
+        String result = data.substring(data.indexOf("MÃ SINH VIÊN:") + 13, data.indexOf("ĐỊNH DANH:"));
+        return result.trim();
+
+    }
+
 
 
 

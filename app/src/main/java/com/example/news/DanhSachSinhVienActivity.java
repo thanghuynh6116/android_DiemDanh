@@ -222,7 +222,7 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
                 AlertDialog alertDialog = new AlertDialog.Builder(DanhSachSinhVienActivity.this).create();
                 alertDialog.setTitle("Thông Tin Không Chính Xác");
                 alertDialog.setMessage("Vui lòng quét đúng mã QR in trên thẻ sinh viên của trường.!");
-                Log.d("thang", "onActivityResult: "+ VNCharacterUtils.removeAccent(result));
+
 
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                         new DialogInterface.OnClickListener() {
@@ -234,6 +234,28 @@ public class DanhSachSinhVienActivity extends AppCompatActivity {
                 return;
             }
 
+            // check xem sinh vien co trong lop hoc khong
+            boolean isCheckSV = false;
+            for (SinhVien item : arrSinhVien) {
+                if(Common.getMaSV(result).equals(item.getCode())){
+                    isCheckSV = true;
+                }
+            }
+            // nếu ischeck = false nghĩa là không trùng vs bất kì msv nào trong lớp đưa ra thông báo
+            if(!isCheckSV){
+                AlertDialog alertDialog = new AlertDialog.Builder(DanhSachSinhVienActivity.this).create();
+                alertDialog.setTitle("Sinh Viên Không Tồn Tại");
+                alertDialog.setMessage("Sinh viên này không thuộc lớp học này vui lòng kiểm tra lại.!");
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                return;
+            }
             //thông tin điểm danh
             AlertDialog alertDialog = new AlertDialog.Builder(DanhSachSinhVienActivity.this).create();
             alertDialog.setTitle("Thông Tin Sinh Viên");
